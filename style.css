@@ -1,0 +1,665 @@
+/* GENEL AYARLAR */
+:root {
+    /* Pia Kurumsal Renk Paleti - Mavi, Siyah ve Açık Gri tonları önerilir */
+    --primary-color: #F8F9FA;      /* Ana Mavi (CTA Düğmeleri, Başlık vurguları) */
+    --secondary-color: #463e66;    /* Arka Plan Açık Gri (Section araları) */
+    --text-dark: #212529;          /* Koyu Metin */
+    --text-light: #FFFFFF;         /* Açık Metin */
+    --accent-color: #b2afbd;       /* Vurgu Rengi (Hovver, Dikkat çekme) */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--text-light);
+}
+
+/* --- HEADER ve NAVİGASYON --- */
+
+header {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lang-switch{
+    /* --- DİL DEĞİŞTİRME BUTONU STİLİ --- */
+
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 5px; /* Sadece küçük bir dolgu */
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    margin-left: 20px;
+    transition: background-color 0.3s;
+}
+
+.lang-switch:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Üzerine gelince hafif beyaz gölge */
+    border-color: var(--accent-color); /* Vurgu rengiyle çerçeve */
+}
+
+.lang-switch img {
+    height: 18px; /* Bayrak ikonunun boyutu */
+    width: auto;
+    display: block;
+    border-radius: 2px; /* Bayrağa hafif yuvarlatılmış köşe */
+}
+
+/* --- HEADER ve NAVİGASYON (GÜNCEL) --- */
+
+/* Mevcut header stilinin altına ekleyin */
+.logo img {
+    height: 40px; /* Logonun yüksekliğini ayarlayın */
+    width: auto;
+    display: block;
+}
+
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li a {
+    color: var(--text-dark);
+    text-decoration: none;
+    margin-left: 20px;
+    padding: 5px 10px;
+    transition: background-color 0.3s;
+    border-radius: 4px;
+}
+
+nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- ORTAK SECTION STİLİ --- */
+
+section {
+    padding: 80px 5%;
+    min-height: 50vh;
+}
+
+/* Section aralarına renk geçişi (Hakkında ve Başvuru kısımlarını öne çıkarır) */
+#hakkinda, #basvuru {
+    background-color: #ffffff;
+}
+
+h2 {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 30px;
+    border-bottom: 3px solid var(--accent-color);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+ h3{
+    color: var(--secondary-color)
+ }
+/* --- HİKAYELER VE REFERANS KARTLARI STİLİ --- */
+#hikayeler {
+    background-color: var(--secondary-color);
+    text-align: center;
+    padding: 60px 5%;
+    position: relative;
+    z-index: 2;
+    margin-top: 50px;
+}
+
+
+#baslik{
+    color: var(--primary-color);
+}
+
+.referans-kart {
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: var(--text-light);
+    border-radius: 8px;
+    box-shadow: 0 -5px 0 0 var(--text-light), 0 6px 15px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid var(--accent-color); /* Turuncu Vurgu */
+}
+
+.referans-kart p {
+    font-size: 1.15rem;
+    font-style: italic;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.referans-yazar strong {
+    color: var(--secondary-color);
+    font-size: 1rem;
+}
+
+.referans-yazar span {
+    display: block;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* --- YENİ EKLENECEK CAROUSEL STİLLERİ --- */
+
+.slider-container {
+    max-width: 800px;
+    margin: 30px auto;
+    position: relative; /* Okları konumlandırmak için */
+    overflow: hidden; /* Kartların taşmasını gizlemek için */
+}
+
+.referans-slider {
+    display: flex; /* Kartları yan yana dizer */
+    transition: transform 0.4s ease-in-out; /* Kaydırma animasyonu */
+}
+
+.referans-kart {
+    flex: 0 0 100%; /* Her kartın konteynerin %100 genişliğinde olmasını sağlar */
+    min-width: 100%; /* Mobil cihazlarda kartların küçülmesini engeller */
+    max-width: 100%;
+    
+    /* MEVCUT STİLİNİZİ BURADA KORUYUN VE GÜNCELLEYİN: */
+    /* Eski 'max-width: 700px;' değerini kaldırıp, aşağıdaki gibi yapın */
+    margin: 0; /* İç boşluğu temizler */
+    padding: 30px;
+    background-color: var(--text-light);
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid var(--accent-color);
+}
+
+
+/* OK STİLLERİ */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--accent-color); /* Koyu Arka Plan */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 1.5rem;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+/* --- KAYDIRICI OKLARI İÇİN TİTREME DÜZELTMESİ --- */
+
+/* Genel buton stilinden gelen transform/kayma efektini sıfırlar */
+.slider-btn:hover {
+    transform: translateY(-50%) scale(1.05); /* Sadece dikey konumunu koru ve biraz büyümesini sağla */
+    background: var(--secondary-color); /* Hover rengini koru */
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+/* --- ANA SAYFA (HERO) BÖLÜMÜ - GÜNCEL --- */
+
+#ana-sayfa {
+    text-align: center;
+    color: var(--text-light);
+    padding: 120px 5%; /* Daha büyük alan */
+    position: relative; /* Arka planı konumlandırmak için */
+    overflow: hidden; /* Bulanık görselin taşmasını engeller */
+}
+/* --- LOGO VE GÜVEN BÖLÜMÜ STİLİ --- */
+#logos {
+    background-color: #f8f9fa; /* Beyaz arka plan */
+    padding: 40px 5%;
+    text-align: center;
+   
+}
+
+#logos h3 {
+    font-size: 1.1rem;
+    color:var(--secondary-color); /* Hafif gri metin */
+    margin-bottom: 25px;
+    font-weight: 400;
+}
+
+/* style.css'teki .logo-grid stilini bulun ve değiştirin */
+.logo-grid {
+    display: flex;
+    /* KRİTİK DEĞİŞİKLİK: Öğeler arasındaki boşluğu otomatik ve eşit dağıtır */
+    justify-content: space-evenly; 
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px; /*özelliğini bu kuralda kullanmak isteyebilirsiniz. 
+       Eğer `space-evenly` kullanıyorsanız `gap` değeri görsel olarak değişecektir. */
+}
+
+/* style.css'teki .logo-grid img stilini bulun ve değiştirin */
+.logo-grid img {
+    height: 100px; 
+    transition: opacity 0.3s ease-in-out,; /* Hafif büyüme için transform eklendi */
+    width: auto;
+    /* BAŞLANGIÇ: Kendi renginde, biraz soluk görünür */
+    opacity: 0.6; 
+    
+    /* Kritik: Hover olayının engellenmemesi için */
+    pointer-events: auto !important; 
+    filter: none; /* Önceki grayscale etkisini tamamen kaldırır */
+}
+
+/* HOVER OLAYINI LOGONUN KENDİSİNDE DEĞİL, ÜST KONTEYNERDE YAKALARIZ */
+.logo-grid img:hover{
+    opacity: 1; /* Üzerine gelince %100 canlılık */
+    transform: scale(1.05); /* Hafif büyüme efekti */
+}
+
+.countdown-container{
+        margin-top: 50px;
+        padding: 20px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0,2);
+}
+
+.countdown-container h3{
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 15px;
+
+}
+
+.countdown-timer{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+}
+
+.countdown-timer div{
+    background-color: #a098d8;
+    color: var(--text-dark);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    min-width: 120px;
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.countdown-timer span{
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-top: 5px;
+    color: #444;
+}
+/* ANASAYFA */
+/* --- YENİ PARALAKS EFEKTİ STİLİ --- */
+
+/* Arkaplan div'i, ana bölümü kaplayacak şekilde ayarlanır */
+.parallax-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2; /* İçeriğin (yazıların) arkasına gitmesini sağlar */
+    
+    /* GÖRSELİ BURAYA TANIYORUZ */
+    background-image: url('pia-arkaplan.jpg');
+    background-size: cover;
+    background-position: center;
+    
+    /* KRİTİK PARALAKS KURALI: Kaydırma olayına sabit kalır */
+    background-attachment: fixed;
+}
+/* Görselin üzerine binen hafif karartma filtresini koruyalım */
+#ana-sayfa::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Karartma katmanı */
+    z-index: -1; 
+}
+
+#ana-sayfa h2 {
+    /* Başlık rengini beyaz tutun */
+    color: var(--text-light); 
+    font-size: 3rem;
+    margin-bottom: 15px;
+    border-bottom: none;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Okunurluğu artırmak için gölge */
+}
+
+#ana-sayfa p {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Okunurluğu artırmak için gölge */
+}
+/* --- CTA (Hemen Başvur) BUTONU --- */
+
+button {
+    background-color: #a098d8;
+    color: var(--text-dark);
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    text-decoration: none; /* A etiketi içine konduğunda da güzel durması için */
+    display: inline-block;
+}
+
+button:hover {
+    background-color: var(--secondary-color); /* Daha koyu sarı ton */
+    transform: translateY(-2px); /* Hafif yukarı kayma efekti */
+}
+
+/* --- BAŞVURU FORMU STİLİ --- */
+
+#basvuru form {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: var(--text-light);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+fieldset {
+    border: 1px solid var(--secondary-color);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+legend {
+    font-weight: 600;
+    color: var(--secondary-color);
+    padding: 0 10px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    max-width: 450px;
+    text-align: left;
+}
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    max-width: 450px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* Form içindeki butonu diğerlerinden ayırma */
+#basvuru form button {
+    width: 100%;
+    margin-top: 20px;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary-color); /* Mavi çerçeve ekler */
+    box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15); /* Hafif Mavi parlama efekti */
+    outline: none; /* Tarayıcının varsayılan dış çizgisini kaldırır */
+}
+/* Dosya Yükleme Butonunu Gizleme ve Label'ı Kullanma (Daha Gelişmiş Stil) */
+/* Şu anki kodunuzda zor olabilir. Basitçe input alanını hizalayalım: */
+input[type="file"] {
+    padding-top: 15px; /* Üstten boşluk bırakır */
+    border: none; /* Varsayılan kenarlığı kaldırır */
+}
+/* --- FOOTER --- */
+
+footer {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+    text-align: center;
+    padding: 20px 5%;
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+/* --- MÜFREDAT VE SSS STİLLERİ --- */
+
+#hakkinda ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+#hakkinda ul li {
+    background-color: var(--text-light);
+    margin-bottom: 10px;
+    padding: 15px;
+    border-left: 5px solid var(--accent-color);
+    box-shadow: 0 1px 3px rgb(218, 194, 194);
+}
+/* --- ZAMAN ÇİZELGESİ (TIMELINE) STİLLERİ --- */
+/* --- ZAMAN ÇİZELGESİ (TIMELINE) FİNAL STİLLERİ --- */
+
+.timeline-container {
+    position: relative;
+    padding: 20px 0;
+    margin: 40px auto;
+    max-width: 900px;
+    /* Çizginin yüksekliğini alması için iki önemli stil */
+    min-height: 100px; 
+    overflow: hidden; 
+}
+
+/* Ana Dikey Çizgi (Çizginin kendisi) */
+.timeline-container::after {
+    content: '';
+    position: absolute;
+    width: 4px; 
+    background-color: var(--secondary-color);
+    top: 0;
+    bottom: 0; 
+    left: 50%;
+    margin-left: -2px; 
+    z-index: 1; 
+}
+
+/* --- Clearfix Düzeltmesi (Çizgiyle Çakışmaması İçin ::before Kullanımı) --- */
+.timeline-container::before {
+    content: " ";
+    display: table;
+}
+
+
+.timeline-item {
+    padding: 10px 40px;
+    position: relative;
+    width: 50%; 
+    z-index: 2; 
+}
+
+.timeline-item:nth-child(even) {
+    margin-left: 50%; 
+}
+
+.timeline-dot {
+    width: 30px;
+    height: 30px;
+    background-color: #ffffff;
+    color: var(--text-dark);
+    border: 2px solid var(--secondary-color);
+    border-radius: 50%;
+    position: absolute;
+    top: 20px;
+    z-index: 10;
+    text-align: center;
+    line-height: 26px;
+    font-weight: 700;
+}
+
+.timeline-item:nth-child(odd) .timeline-dot {
+    right: -17px; 
+}
+.timeline-item:nth-child(even) .timeline-dot {
+    left: -17px; 
+}
+
+.timeline-content {
+    padding: 15px;
+    background-color: rgb(250, 250, 250);
+    border: 1px solid var(--secondary-color);
+    position: relative;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-content h4 {
+    color: var(--secondary-color); 
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+/* Yan oklar */
+.timeline-content::before {
+    content: " ";
+    height: 0;
+    position: absolute;
+    top: 22px;
+    width: 0;
+    z-index: 1;
+    border: medium solid var(--text-light);
+}
+
+.timeline-item:nth-child(odd) .timeline-content::before {
+    left: 100%;
+    border-width: 10px 0 10px 10px;
+    border-color: transparent transparent transparent rgb(187, 150, 236);
+}
+
+.timeline-item:nth-child(even) .timeline-content::before {
+    right: 100%;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent  rgb(109, 93, 139);
+}
+
+
+/* --- Mobil Görünüm Optimizasyonu (Tek ve Temiz Tanım) --- */
+@media screen and (max-width: 600px) {
+    .timeline-container::after {
+        left: 35px;
+    }
+    .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+        margin-left: 0;
+    }
+    .timeline-item:nth-child(even) {
+        margin-left: 0;
+    }
+    .timeline-dot {
+        left: 19px;
+    }
+    .timeline-item:nth-child(odd) .timeline-content::before,
+    .timeline-item:nth-child(even) .timeline-content::before {
+        left: 60px;
+        border-width: 10px 10px 10px 0;
+        border-color: transparent var(--text-light) transparent transparent;
+    }
+}
+/* --- SSS AKORDEON STİLLERİ --- */
+
+/* Tüm SSS alanı için bir konteyner stili */
+#sss {
+    max-width: 800px;
+    margin: 0 auto; /* Sayfada ortalamak için */
+}
+
+.faq-item {
+    margin-bottom: 10px;
+    border: 1px solid #ececec;
+    border-radius: 6px;
+    overflow: hidden; /* Cevabın taşmasını engeller */
+    box-shadow:0 4px 8px rgba(0, 0, 0, 0.15) ;
+}
+
+.faq-question {
+    background-color:#fbfbfb; /* Daha koyu sarı ton */
+    color: var(--secondary-color);
+    padding: 15px 20px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    /* Küçük bir ok ikonu ekleyebiliriz */
+    position: relative;
+}
+
+.faq-question:hover {
+    background-color: rgb(228, 228, 228); /* Daha koyu sarı ton */
+
+}
+
+.faq-answer {
+    padding: 0 20px;
+    max-height: 0; /* Başlangıçta gizli tut */
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out; 
+    background-color:2px solid var(--accent-color) 
+}
+
+.faq-answer p {
+    padding: 15px 0;
+    margin-bottom: 0; /* İç paragrafın alt boşluğunu kaldırma */
+    color: var(--text-dark);
+}
+
+/* Cevap aktif olduğunda (JavaScript tarafından eklenen sınıf) */
+.faq-answer.active {
+    max-height: 500px; /* Cevabın sığacağı yeterince büyük bir değer */
+    padding: 15px 20px;
+}
+
+label::after{
+    content: "*";
+    color: #DC3545;
+    font-weight: 700;
+    margin-left: 4px;
+}
