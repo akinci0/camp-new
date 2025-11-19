@@ -201,9 +201,15 @@
                     <legend>Kişisel Bilgiler</legend>
                     <label for="ad">Adınız Soyadınız:</label>
                     <input type="text" id="ad" name="ad_soyad" required placeholder="Adınızı ve soyadınızı tam yazınız.">
-
+                    
+                    <label for="tc">TC Kimlik Numaranız:</label>
+                    <input type="text" id="tc" name="tc_kimlik" required pattern="\d{11}" 
+                    placeholder="11 haneli TC kimlik numaranız." 
+                    inputmode="numeric">
+                    
                     <label for="email">E-posta Adresiniz:</label>
                     <input type="email" id="email" name="email" required placeholder="ornek@mailadresi.com">
+                    
                 </fieldset>
 
                 <fieldset>
@@ -331,6 +337,38 @@ prevBtn.addEventListener('click', () => {
     if (currentIndex > 0) {
         currentIndex--;
         updateSlider();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tcInput = document.getElementById('tc');
+
+    if (tcInput) {
+        // Klavyeden bir tuşa basıldığında çalışır
+        tcInput.addEventListener('keypress', function(event) {
+            const charCode = (event.which) ? event.which : event.keyCode;
+            
+            // Eğer karakter kodu 0-9 arasındaki bir rakam değilse (ASCII 48-57)
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                // Girişi engelle
+                event.preventDefault();
+            }
+            
+            // Ayrıca 11 karakterden fazlasını da engeller
+            if (this.value.length >= 11 && charCode !== 8) { // Backspace (8) hariç
+                event.preventDefault();
+            }
+        });
+        
+        // Kopyala/Yapıştır ile harf girmeyi engeller (Daha güçlü kontrol)
+        tcInput.addEventListener('paste', function(event) {
+            const pasteData = event.clipboardData.getData('text');
+            // Yalnızca rakamları kabul et
+            if (!/^\d+$/.test(pasteData)) {
+                event.preventDefault();
+            }
+            // 11 karakteri aşan kopyalamayı da engellemek için metni kesebiliriz (daha karmaşık)
+        });
     }
 });
 </script>

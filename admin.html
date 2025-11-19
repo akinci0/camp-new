@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>PiA Kamp Başvuruları Yönetim Paneli</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style> /* Basit Admin CSS'i */
+        body { background-color: #f4f4f9; font-family: sans-serif; }
+        .admin-container { max-width: 95%; margin: 50px auto; }
+        #appTable { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        #appTable th, #appTable td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 0.9em; }
+        #appTable th { background-color: var(--primary-color); color: white; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <h2>PiA Kamp Başvuru Yönetim Paneli</h2>
+    <p id="status" style="font-weight: bold; color: var(--accent-color);">Veriler yükleniyor...</p>
+    
+    <table id="appTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Adı Soyadı</th>
+                <th>E-posta</th>
+                <th>Motivasyon (Önizleme)</th>
+                <th>AI Puanı</th>
+                <th>Karar</th>
+                <th>Detay</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+</div>
+
+<script>
+// JavaScript Kodu
+// admin.html dosyanızdaki JavaScript kodu
+const API_ENDPOINT = 'http://localhost:3000/api/applications';// KRİTİK: Burayı değiştirin!
+const tableBody = document.getElementById('tableBody');
+const statusDiv = document.getElementById('status');
+
+async function loadApplications() {
+    statusDiv.textContent = 'Veriler yükleniyor...';
+    try {
+        // Serverless API'a GET isteği
+        const response = await fetch(API_ENDPOINT);
+        const applications = await response.json();
+
+        if (response.status !== 200) {
+            statusDiv.textContent = `Hata: ${applications.message || 'API hatası.'}`;
+            return;
+        }
+
+        tableBody.innerHTML = ''; // Tabloyu temizle
+
+        applications.forEach(app => {
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td>${app.id}</td>
+                <td>${app.ad_soyad}</td>
+                <td>${app.email}</td>
+                <td>${app.motivasyon_metni.substring(0, 50)}...</td>
+                <td>${app.ai_motivasyon_notu || '—'}</td>
+                <td><select class="admin-decision" data-id="${app.id}">
+                        <option value="Beklemede" ${app.admin_karari === 'Beklemede' ? 'selected' : ''}>Beklemede</option>
+                        <option value="Kabul Edildi" ${app.admin_karari === 'Kabul Edildi' ? 'selected' : ''}>Kabul Edildi</option>
+                        <option value="Reddedildi" ${app.admin_karari === 'Reddedildi' ? 'selected' : ''}>Reddedildi</option>
+                    </select>
+                </td>
+                <td><a href="#" onclick="showDetails(${app.id})">Detaylar</a></td>
+            `;
+        });
+
+        statusDiv.textContent = `Toplam ${applications.length} başvuru yüklendi.`;
+
+    } catch (error) {
+        statusDiv.textContent = 'Veri çekme sırasında ağ hatası oluştu.';
+        console.error('Fetch Error:', error);
+    }
+}
+
+// Admin kararını değiştiren fonksiyon (Update API'ı için hazırlık)
+function updateDecision(id, decision) {
+    statusDiv.textContent = `ID ${id} için karar güncelleniyor...`;
+    // BURAYA UPDATE-DECISION SERVERLESS API ÇAĞRISI GELECEKTİR.
+    console.log(`Karar güncellendi: ID ${id}, Karar: ${decision}`);
+    // Başarılı olursa: loadApplications(); çağrılır
+}
+
+// Tablodaki Select (Karar) alanı değiştiğinde
+document.addEventListener('change', (event) => {
+    if (event.target.classList.contains('admin-decision')) {
+        const id = event.target.getAttribute('data-id');
+        const decision = event.target.value;
+        updateDecision(id, decision); 
+    }
+});
+
+// Detay gösterme (CV linklerini açma vb.)
+function showDetails(id) {
+    // Burada MySQL'den gelen CV linki ve Öğrenci Belgesi linki açılabilir.
+    // Şimdilik sadece uyarı verelim
+    alert(`Detaylar ID: ${id} için CV ve Belge linklerini içerir.`);
+}
+
+loadApplications(); // Sayfa yüklendiğinde verileri çek
+
+</script>
+</body>
+</html>

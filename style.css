@@ -1,8 +1,8 @@
 /* GENEL AYARLAR */
 :root {
     /* Pia Kurumsal Renk Paleti - Mavi, Siyah ve Açık Gri tonları önerilir */
-    --primary-color: #F8F9FA;      /* Ana Mavi (CTA Düğmeleri, Başlık vurguları) */
-    --secondary-color: #463e66;    /* Arka Plan Açık Gri (Section araları) */
+    --primary-color: #F8F9FA;      /* Ana renk (CTA Düğmeleri, Başlık vurguları) */
+    --secondary-color: #463e66;    
     --text-dark: #212529;          /* Koyu Metin */
     --text-light: #FFFFFF;         /* Açık Metin */
     --accent-color: #b2afbd;       /* Vurgu Rengi (Hovver, Dikkat çekme) */
@@ -31,6 +31,7 @@ header {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
 .lang-switch{
@@ -662,4 +663,24 @@ label::after{
     color: #DC3545;
     font-weight: 700;
     margin-left: 4px;
+}
+
+/* --- KAMERA VE SAYACIN ORTALANMASI VE YUVARLATILMASI --- */
+
+/* 1. Kapsayıcıyı (visual-area) ortala */
+.visual-area {
+    display: flex;
+    flex-direction: column; /* İçeriği dikey olarak hizala */
+    align-items: center;    /* İçeriği yatayda ortala (KRİTİK) */
+    margin-bottom: 30px;
+}
+
+/* 2. Video Elementine Yuvarlaklık ve Boyut Uygula */
+#webcamVideo {
+    width: 200px;  /* Yuvarlak olması için sabit bir boyut veriyoruz */
+    height: 200px;
+    border-radius: 50%; /* Tam yuvarlak yapar */
+    object-fit: cover; /* Video görüntüsünün kutuyu doldurmasını sağlar */
+    border: 5px solid var(--primary-color); /* Mavi çerçeveyi belirginleştirdik */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Hafif gölge ekledik */
 }

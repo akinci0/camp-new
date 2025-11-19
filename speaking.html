@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>PiA English Speaking Assessment</title>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="pia-logo.png" alt="PiA Group Logo">
+        </div>
+    </header>
+
+    <main>
+        <section id="speaking-test" style="min-height: 80vh; padding: 100px 5%; text-align: center;">
+            
+            <h2 style="color: #6c757d;">PiA English Speaking Assessment</h2>
+            <p>This phase is mandatory for selected candidates. Please record your response for a maximum of 30 seconds.</p>
+            
+            <div id="guidance" style="margin: 30px auto; max-width: 600px; padding: 20px; border: 1px solid var(--secondary-color); border-radius: 8px; background: var(--text-light); box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                 <h3 style="color: var(--accent-color);">Assessment Question:</h3>
+                 <p class="question-text">"Why is securing an internship at PiA crucial for the trajectory of your professional career?"</p>
+            </div>
+
+            <div class="test-controls" style="margin-top: 40px;">
+                
+                <div class="visual-area">
+                    <video id="webcamVideo" autoplay muted></video>
+                    <div id="countdownTimer">00:30</div>
+                </div>
+                
+                <div id="recording-status" style="color: var(--primary-color); font-weight: bold; margin-bottom: 15px;">Awaiting Initialization...</div>
+
+                <button type="button" id="recordButton">Start Recording</button>
+                <button type="button" id="stopButton" disabled>Stop Recording</button>
+                <button type="button" id="uploadButton" disabled>Upload Recording</button>
+            </div>
+            
+            <form id="submission-form" action="KOPYALADIĞINIZ_FORMSPREE_ADRESİNİ_BURAYA_YAPIŞTIRIN" method="POST">
+                <input type="hidden" name="ad_soyad" id="hidden_ad_soyad">
+                <input type="hidden" name="basvuru_email" id="hidden_email" required>
+                <input type="hidden" name="speaking_file_url" id="speaking_file_url" required>
+                
+                <button type="submit" id="submitTest" disabled style="margin-top: 30px;">Finalize and Submit Assessment</button>
+            </form>
+            
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 PiA Group Development Camp. All Rights Reserved.</p>
+        <p>Contact: bootcamp@pia.com | <a href="#">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+    // Speaking Sınavı JavaScript Mantığı (Önceki Yanıtta Verilen Koddur)
+    
+    const recordButton = document.getElementById('recordButton');
+    const stopButton = document.getElementById('stopButton');
+    const uploadButton = document.getElementById('uploadButton');
+    const submitTestButton = document.getElementById('submitTest');
+    const statusDiv = document.getElementById('recording-status');
+    const speakingUrlInput = document.getElementById('speaking_file_url');
+
+    const webcamVideo = document.getElementById('webcamVideo');
+    const countdownDisplay = document.getElementById('countdownTimer');
+    const MAX_RECORDING_TIME = 30; // Maksimum kayıt süresi (saniye)
+
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let audioBlob = null;
+    let countdownInterval = null;
+    let currentStream = null; // Mikrofon/Kamera akışını tutmak için
+    
+    // Başlangıçta video elementini ve sayacı gizle (CSS ile de yapılabilir, ama JS ile daha garanti)
+    webcamVideo.style.display = 'none';
+    countdownDisplay.style.display = 'none';
+
+    // --- Durum Güncelleme Fonksiyonu ---
+    const updateStatus = (message, color = '#0056B3') => {
+        statusDiv.innerHTML = message;
+        statusDiv.style.color = color;
+    };
+
+    // --- Akışı ve Değişkenleri Temizleme (Butonları Tekrar Kullanılabilir Yapmak İçin) ---
+    function cleanupAndReset() {
+        // Akışı sonlandır
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+            currentStream = null;
+        }
+        
+        // Sayacı durdur
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+        
+        // Değişkenleri ve arayüzü resetle
+        mediaRecorder = null;
+        audioChunks = [];
+        countdownDisplay.textContent = `00:${MAX_RECORDING_TIME.toString().padStart(2, '0')}`;
+        
+        // Kayıt düğmesini tekrar etkinleştir
+        recordButton.disabled = false;
+        stopButton.disabled = true;
+        
+        // Kamera/Sayaç görünümünü tekrar gizle
+        webcamVideo.style.display = 'none';
+        countdownDisplay.style.display = 'none';
+        webcamVideo.srcObject = null;
+    }
+
+    // --- GERİ SAYIM FONKSİYONU ---
+    function startCountdown() {
+        let timeLeft = MAX_RECORDING_TIME;
+        countdownDisplay.textContent = `00:${timeLeft.toString().padStart(2, '0')}`;
+        
+        countdownInterval = setInterval(() => {
+            timeLeft--;
+            const seconds = timeLeft.toString().padStart(2, '0');
+            countdownDisplay.textContent = `00:${seconds}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                countdownDisplay.textContent = '00:00';
+                
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                    updateStatus('Time is up! Processing audio file. Please click Upload Recording.', '#FFC107');
+                    stopButton.disabled = true;
+                }
+            }
+        }, 1000);
+    }
+
+    // --- KAYIT BAŞLAT ---
+    recordButton.addEventListener('click', async () => {
+        // Önceki kayıt varsa temizle ve resetle
+        cleanupAndReset(); 
+        audioBlob = null; // Eski blobu temizle
+
+        try {
+            // 1. KAMERAYI VE MİKROFONU BAŞLAT
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            currentStream = stream; // Akışı kaydet
+            
+            // Kamera/Sayaç Görünür Yap
+            webcamVideo.style.display = 'block';
+            countdownDisplay.style.display = 'block';
+
+            // Kamerayı video elementine bağla
+            webcamVideo.srcObject = stream;
+            
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+            
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+            
+            mediaRecorder.onstop = () => {
+                audioBlob = new Blob(audioChunks, { 'type' : 'audio/webm' });
+                
+                // Akışı sonlandır, ancak değişkenleri temizleme
+                stream.getTracks().forEach(track => track.stop());
+                currentStream = null;
+
+                stopButton.disabled = true;
+                uploadButton.disabled = false;
+                
+                updateStatus('Recording completed. Ready for upload.', '#28A745'); // Yeşil
+            };
+            
+            mediaRecorder.start();
+            updateStatus('RECORDING IN PROGRESS... (30 seconds remaining)', '#DC3545'); // Kırmızı
+            recordButton.disabled = true;
+            stopButton.disabled = false;
+
+            // 2. SAYACI BAŞLAT
+            startCountdown();
+
+        } catch (err) {
+            updateStatus(`Camera/Mic Access Denied: ${err.name}. Please refresh and allow access.`, '#DC3545');
+            console.error('Access denied:', err);
+            cleanupAndReset(); // Hata durumunda da resetle
+        }
+    });
+
+    // --- KAYIT DURDUR ---
+    stopButton.addEventListener('click', () => {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+            // Sayacı ve akışı manuel durdurma
+            if (countdownInterval) clearInterval(countdownInterval);
+            if (currentStream) currentStream.getTracks().forEach(track => track.stop());
+            
+            updateStatus('Processing audio file...', '#FFC107'); // Turuncu
+            stopButton.disabled = true;
+        }
+    });
+
+
+    // --- KAYDI YÜKLE (AI/SERVERLESS ENTEGRASYON NOKTASI) ---
+    uploadButton.addEventListener('click', async () => {
+        if (!audioBlob) return;
+        updateStatus('Uploading to server...', '#0056B3'); // Mavi
+        uploadButton.disabled = true;
+        
+        // *****************************************************************
+        // 🚨 SERVERLESS/AI PROJENİZİN EN KRİTİK KISMI BURASIDIR
+        // Burada Serverless API'nıza POST isteği atacaksınız.
+        // *****************************************************************
+        
+        try {
+            // Simülasyon: 2 saniye bekleme
+            await new Promise(resolve => setTimeout(resolve, 2000)); 
+            
+            // Simülasyon: Yükleme başarılı oldu. AI'ya gidecek linki set et
+            const fakeFileUrl = `https://yourstorage.com/audio/${Date.now()}.webm`;
+            speakingUrlInput.value = fakeFileUrl; 
+            
+            updateStatus('Upload complete! Assessment is ready to be submitted.', '#28A745'); // Yeşil
+            submitTestButton.disabled = false; // Formu göndermeye izin ver
+            recordButton.disabled = true; // Tekrar kayıt başlatma imkanını kaldır
+            
+        } catch(error) {
+             updateStatus('Upload Failed. Please try again.', '#DC3545'); // Kırmızı
+             uploadButton.disabled = false;
+        }
+    });
+
+    // --- URL PARAMETRELERİNDEN VERİ ÇEKME (Aday Kimliği) ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const email = params.get('email');
+        
+        // Gizli video elementini CSS ile gizlemek yerine, JS ile gizli tutalım.
+        webcamVideo.style.display = 'none';
+
+        if (email) {
+            document.getElementById('hidden_email').value = email;
+            updateStatus(`Welcome, Assessment for: ${email}`, '#0056B3');
+        } else {
+            updateStatus('Error: Candidate identity missing. Please use the link provided in your email.', '#DC3545');
+            recordButton.disabled = true;
+        }
+        
+        // Sayfadan ayrılırken mikrofon/kamerayı kapat
+        window.addEventListener('beforeunload', cleanupAndReset);
+    });
+</script>
